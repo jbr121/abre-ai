@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Um convite fofo do José para a Anna."
+    />
+    <title>Convite para a Anna</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div class="hearts" aria-hidden="true">
+        <span>♡</span>
+        <span>♥</span>
+        <span>♡</span>
+        <span>♥</span>
+        <span>♡</span>
+        <span>♥</span>
+      </div>
+
+      <section class="card" aria-labelledby="question-title">
+        <p class="eyebrow">com carinho, José</p>
+        <h1 id="question-title">Anna, você aceita sair comigo?</h1>
+        <p class="subtitle">
+          Prometo um encontro leve, risadas boas e um momento bem especial.
+        </p>
+
+        <div class="button-row" id="button-row">
+          <button class="yes-button" id="yes-button" type="button">Sim</button>
+          <button class="no-button" id="no-button" type="button">Não</button>
+        </div>
+      </section>
+
+      <section class="celebration" id="celebration" aria-live="polite" hidden>
+        <div class="celebration-card">
+          <p class="big-heart" aria-hidden="true">♥</p>
+          <h2>Eba, Anna!</h2>
+          <p>Mal posso esperar pelo nosso encontro.</p>
+          <p class="signature">- José</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
