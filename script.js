@@ -5,6 +5,17 @@ const celebration = document.querySelector("#celebration");
 
 let ignoreNextClick = false;
 
+function getViewport() {
+  const viewport = window.visualViewport;
+
+  return {
+    width: viewport?.width ?? window.innerWidth,
+    height: viewport?.height ?? window.innerHeight,
+    offsetLeft: viewport?.offsetLeft ?? 0,
+    offsetTop: viewport?.offsetTop ?? 0,
+  };
+}
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -13,10 +24,13 @@ function placeNoButtonNearQuestion() {
   const rowRect = buttonRow.getBoundingClientRect();
   const buttonRect = noButton.getBoundingClientRect();
   const yesRect = yesButton.getBoundingClientRect();
+  const viewport = getViewport();
   const centerX = rowRect.left + rowRect.width / 2;
   const margin = 14;
-  const maxLeft = Math.max(margin, window.innerWidth - buttonRect.width - margin);
-  const maxTop = Math.max(margin, window.innerHeight - buttonRect.height - margin);
+  const minLeft = viewport.offsetLeft + margin;
+  const minTop = viewport.offsetTop + margin;
+  const maxLeft = Math.max(minLeft, viewport.offsetLeft + viewport.width - buttonRect.width - margin);
+  const maxTop = Math.max(minTop, viewport.offsetTop + viewport.height - buttonRect.height - margin);
   const hasRoomBesideYes = yesRect.right + 16 <= maxLeft;
   const left = hasRoomBesideYes
     ? yesRect.right + 16
@@ -25,8 +39,8 @@ function placeNoButtonNearQuestion() {
     ? rowRect.top + rowRect.height / 2 - buttonRect.height / 2
     : yesRect.bottom + 14;
 
-  noButton.style.left = `${clamp(left, margin, maxLeft)}px`;
-  noButton.style.top = `${clamp(top, margin, maxTop)}px`;
+  noButton.style.left = `${clamp(left, minLeft, maxLeft)}px`;
+  noButton.style.top = `${clamp(top, minTop, maxTop)}px`;
 }
 
 function distanceBetween(x1, y1, x2, y2) {
@@ -36,19 +50,22 @@ function distanceBetween(x1, y1, x2, y2) {
 function randomPositionAwayFrom(pointerX, pointerY) {
   const margin = 14;
   const rect = noButton.getBoundingClientRect();
-  const maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
-  const maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
-  const minDistance = Math.min(260, Math.max(window.innerWidth, window.innerHeight) * 0.32);
+  const viewport = getViewport();
+  const minLeft = viewport.offsetLeft + margin;
+  const minTop = viewport.offsetTop + margin;
+  const maxLeft = Math.max(minLeft, viewport.offsetLeft + viewport.width - rect.width - margin);
+  const maxTop = Math.max(minTop, viewport.offsetTop + viewport.height - rect.height - margin);
+  const minDistance = Math.min(260, Math.max(viewport.width, viewport.height) * 0.32);
 
   let bestPosition = {
-    left: clamp(Math.random() * maxLeft, margin, maxLeft),
-    top: clamp(Math.random() * maxTop, margin, maxTop),
+    left: clamp(minLeft + Math.random() * (maxLeft - minLeft), minLeft, maxLeft),
+    top: clamp(minTop + Math.random() * (maxTop - minTop), minTop, maxTop),
     distance: 0,
   };
 
   for (let attempt = 0; attempt < 30; attempt += 1) {
-    const left = clamp(Math.random() * maxLeft, margin, maxLeft);
-    const top = clamp(Math.random() * maxTop, margin, maxTop);
+    const left = clamp(minLeft + Math.random() * (maxLeft - minLeft), minLeft, maxLeft);
+    const top = clamp(minTop + Math.random() * (maxTop - minTop), minTop, maxTop);
     const centerX = left + rect.width / 2;
     const centerY = top + rect.height / 2;
     const distance = distanceBetween(centerX, centerY, pointerX, pointerY);
