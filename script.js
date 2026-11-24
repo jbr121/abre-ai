@@ -5,6 +5,8 @@ const celebration = document.querySelector("#celebration");
 
 let ignoreNextClick = false;
 
+document.body.appendChild(noButton);
+
 function getViewport() {
   const viewport = window.visualViewport;
 
