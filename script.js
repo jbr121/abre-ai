@@ -105,11 +105,13 @@ function rainHearts() {
 
   for (let index = 0; index < 42; index += 1) {
     const heart = document.createElement("span");
-    const duration = 2.8 + Math.random() * 3.4;
+    const duration = 5.5 + Math.random() * 4.5;
+    const sway = Math.round((Math.random() * 70 + 16) * (Math.random() < 0.5 ? -1 : 1));
 
     heart.textContent = symbols[index % symbols.length];
     heart.style.left = `${Math.random() * 100}%`;
     heart.style.fontSize = `${0.9 + Math.random() * 2.1}rem`;
+    heart.style.setProperty("--sway", `${sway}px`);
     heart.style.animationDuration = `${duration}s`;
     heart.style.animationDelay = `${Math.random() * duration}s`;
     rain.appendChild(heart);
@@ -119,6 +121,7 @@ function rainHearts() {
 function celebrate() {
   celebration.hidden = false;
   yesButton.setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => celebration.classList.add("is-open"));
   rainHearts();
 }
 
