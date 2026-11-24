@@ -95,9 +95,31 @@ function runAway(event) {
   noButton.style.transform = `rotate(${Math.random() * 14 - 7}deg)`;
 }
 
+function rainHearts() {
+  const rain = document.querySelector("#heart-rain");
+  if (rain.childElementCount > 0) {
+    return;
+  }
+
+  const symbols = ["♥", "♡"];
+
+  for (let index = 0; index < 42; index += 1) {
+    const heart = document.createElement("span");
+    const duration = 2.8 + Math.random() * 3.4;
+
+    heart.textContent = symbols[index % symbols.length];
+    heart.style.left = `${Math.random() * 100}%`;
+    heart.style.fontSize = `${0.9 + Math.random() * 2.1}rem`;
+    heart.style.animationDuration = `${duration}s`;
+    heart.style.animationDelay = `${Math.random() * duration}s`;
+    rain.appendChild(heart);
+  }
+}
+
 function celebrate() {
   celebration.hidden = false;
   yesButton.setAttribute("aria-expanded", "true");
+  rainHearts();
 }
 
 window.addEventListener("load", placeNoButtonNearQuestion);
