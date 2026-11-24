@@ -198,7 +198,26 @@ h2 {
 }
 
 .celebration-card {
+  position: relative;
+  z-index: 1;
   animation: pop 420ms ease both;
+}
+
+.heart-rain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.heart-rain span {
+  position: absolute;
+  top: -4rem;
+  color: #ff4f8f;
+  line-height: 1;
+  animation-name: heart-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .big-heart {
@@ -261,6 +280,22 @@ h2 {
   left: 90%;
   animation-delay: 3s;
   animation-duration: 9s;
+}
+
+@keyframes heart-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(115vh) rotate(28deg);
+    opacity: 0.15;
+  }
 }
 
 @keyframes float-up {
