@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=7" />
+    <link rel="stylesheet" href="styles.css?v=8" />
   </head>
   <body>
     <main class="page-shell">
@@ -35,7 +35,7 @@
         <h1 id="question-title">Anna, você aceita sair comigo?</h1>
 
         <div class="button-row" id="button-row">
-          <button class="yes-button" id="yes-button" type="button">Sim</button>
+          <button class="yes-button" id="yes-button" type="button" aria-controls="celebration" aria-expanded="false">Sim</button>
           <button class="no-button" id="no-button" type="button">Não</button>
         </div>
       </section>
@@ -45,11 +45,25 @@
         <div class="celebration-card">
           <p class="big-heart" aria-hidden="true">♥</p>
           <h2>Oba, Anna!</h2>
-          <p>Me chama que eu te busco.</p>
+          <p>Escolhe uma data de dezembro para o nosso encontro e me avisa no e-mail.</p>
+
+          <div class="date-picker">
+            <label for="date-input">Quando vamos sair?</label>
+            <input id="date-input" class="date-input" type="date" />
+            <button class="mail-button" id="mail-button" type="button" disabled>
+              Enviar data para o José
+            </button>
+            <p class="date-status" id="date-status" role="status">
+              Selecione uma data de dezembro para preparar o e-mail.
+            </p>
+            <p class="email-note">
+              O e-mail será aberto pronto para enviar para joseedua13sam@gmail.com.
+            </p>
+          </div>
         </div>
       </section>
     </main>
 
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=8"></script>
   </body>
 </html>

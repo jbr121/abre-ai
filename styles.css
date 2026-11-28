@@ -135,7 +135,8 @@ h2 {
 }
 
 .yes-button,
-.no-button {
+.no-button,
+.mail-button {
   min-width: 8rem;
   min-height: 3.5rem;
   border: 0;
@@ -149,16 +150,25 @@ h2 {
     background 180ms ease;
 }
 
-.yes-button {
+.yes-button,
+.mail-button {
   color: #fff;
   background: linear-gradient(135deg, #ff5d97, #ff8d65);
   box-shadow: 0 1rem 2rem rgba(239, 79, 128, 0.34);
 }
 
 .yes-button:hover,
-.yes-button:focus-visible {
+.yes-button:focus-visible,
+.mail-button:hover:not(:disabled),
+.mail-button:focus-visible:not(:disabled) {
   transform: translateY(-0.16rem) scale(1.04);
   box-shadow: 0 1.2rem 2.4rem rgba(239, 79, 128, 0.42);
+}
+
+.mail-button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.45);
+  opacity: 0.58;
 }
 
 .no-button {
@@ -190,6 +200,7 @@ h2 {
   display: grid;
   place-items: center;
   padding: 1.25rem;
+  overflow-y: auto;
   background: rgba(255, 219, 232, 0);
   opacity: 0;
   transition:
@@ -210,6 +221,49 @@ h2 {
   position: relative;
   z-index: 1;
   animation: pop 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.date-picker {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 26rem;
+  margin: 1.5rem auto 0;
+}
+
+.date-picker label {
+  color: #7c294d;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.date-input {
+  width: 100%;
+  min-height: 3.4rem;
+  border: 0.16rem solid #ffb7cf;
+  border-radius: 1.1rem;
+  padding: 0 1rem;
+  color: #7c294d;
+  background: #fff;
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 0.6rem 1.4rem rgba(174, 85, 121, 0.12);
+}
+
+.date-input:focus-visible {
+  outline: 0.22rem solid rgba(255, 93, 151, 0.35);
+  outline-offset: 0.2rem;
+}
+
+.date-status,
+.email-note {
+  margin: 0;
+  color: #8b4a63;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.email-note {
+  opacity: 0.78;
 }
 
 .heart-rain {
@@ -366,7 +420,8 @@ h2 {
   }
 
   .yes-button,
-  .no-button {
+  .no-button,
+  .mail-button {
     min-width: 7.2rem;
   }
 }

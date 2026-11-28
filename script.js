@@ -2,6 +2,10 @@ const noButton = document.querySelector("#no-button");
 const yesButton = document.querySelector("#yes-button");
 const buttonRow = document.querySelector("#button-row");
 const celebration = document.querySelector("#celebration");
+const dateInput = document.querySelector("#date-input");
+const mailButton = document.querySelector("#mail-button");
+const dateStatus = document.querySelector("#date-status");
+const recipientEmail = "joseedua13sam@gmail.com";
 
 let ignoreNextClick = false;
 
@@ -118,17 +122,89 @@ function rainHearts() {
   }
 }
 
+function getDecemberRange() {
+  const year = new Date().getFullYear();
+
+  return {
+    min: `${year}-12-01`,
+    max: `${year}-12-31`,
+  };
+}
+
+function formatDate(dateValue) {
+  const selectedDate = new Date(`${dateValue}T12:00:00`);
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "full",
+  }).format(selectedDate);
+}
+
+function buildMailtoLink(dateValue) {
+  const formattedDate = formatDate(dateValue);
+  const subject = "Anna escolheu a data do encontro";
+  const body = `Oi, José!\n\nAnna aceitou sair com você e escolheu ${formattedDate} para o encontro.\n\nAgora é só combinar os detalhes.`;
+
+  return `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function updateMailButton() {
+  const dateValue = dateInput.value;
+  const { min, max } = getDecemberRange();
+
+  if (!dateValue) {
+    mailButton.disabled = true;
+    dateStatus.textContent = "Selecione uma data de dezembro para preparar o e-mail.";
+    return;
+  }
+
+  if (dateValue < min || dateValue > max) {
+    mailButton.disabled = true;
+    dateStatus.textContent = "Só vale escolher uma data de dezembro.";
+    return;
+  }
+
+  const formattedDate = formatDate(dateValue);
+  mailButton.disabled = false;
+  dateStatus.textContent = `Data escolhida: ${formattedDate}.`;
+}
+
+function prepareDatePicker() {
+  const { min, max } = getDecemberRange();
+
+  dateInput.min = min;
+  dateInput.max = max;
+
+  if (dateInput.value && (dateInput.value < min || dateInput.value > max)) {
+    dateInput.value = "";
+  }
+
+  updateMailButton();
+}
+
 function celebrate() {
   celebration.hidden = false;
   yesButton.setAttribute("aria-expanded", "true");
   requestAnimationFrame(() => celebration.classList.add("is-open"));
   rainHearts();
+  prepareDatePicker();
+  dateInput.focus({ preventScroll: true });
 }
 
 window.addEventListener("load", placeNoButtonNearQuestion);
 window.addEventListener("resize", placeNoButtonNearQuestion);
 
 yesButton.addEventListener("click", celebrate);
+
+dateInput.addEventListener("change", updateMailButton);
+
+mailButton.addEventListener("click", () => {
+  if (!dateInput.value) {
+    updateMailButton();
+    return;
+  }
+
+  window.location.href = buildMailtoLink(dateInput.value);
+});
 
 noButton.addEventListener("pointerenter", (event) => {
   if (event.pointerType === "mouse") {
