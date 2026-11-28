@@ -7,7 +7,7 @@ const mailButton = document.querySelector("#mail-button");
 const dateStatus = document.querySelector("#date-status");
 // Destino do FormSubmit. Depois de ativar o formulário, troque pelo código
 // aleatório que o FormSubmit fornece para o endereço não ficar no código.
-const notifyTarget = "joseedua13sam@gmail.com";
+const notifyTarget = "joseedua5sam@gmail.com";
 const notifyEndpoint = `https://formsubmit.co/ajax/${notifyTarget}`;
 
 let ignoreNextClick = false;
