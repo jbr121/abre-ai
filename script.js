@@ -5,9 +5,14 @@ const celebration = document.querySelector("#celebration");
 const dateInput = document.querySelector("#date-input");
 const mailButton = document.querySelector("#mail-button");
 const dateStatus = document.querySelector("#date-status");
-const recipientEmail = "joseedua13sam@gmail.com";
+// Destino do FormSubmit. Depois de ativar o formulário, troque pelo código
+// aleatório que o FormSubmit fornece para o endereço não ficar no código.
+const notifyTarget = "joseedua13sam@gmail.com";
+const notifyEndpoint = `https://formsubmit.co/ajax/${notifyTarget}`;
 
 let ignoreNextClick = false;
+let isSending = false;
+let sentDateValue = "";
 
 document.body.appendChild(noButton);
 
@@ -139,21 +144,46 @@ function formatDate(dateValue) {
   }).format(selectedDate);
 }
 
-function buildMailtoLink(dateValue) {
+async function sendDateNotification(dateValue) {
   const formattedDate = formatDate(dateValue);
-  const subject = "Anna escolheu a data do encontro";
-  const body = `Oi, José!\n\nAnna aceitou sair com você e escolheu ${formattedDate} para o encontro.\n\nAgora é só combinar os detalhes.`;
+  const response = await fetch(notifyEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      _subject: "Anna escolheu a data do encontro",
+      _template: "table",
+      _captcha: "false",
+      Data: formattedDate,
+      Mensagem: `Anna aceitou sair com você e escolheu ${formattedDate} para o encontro.`,
+    }),
+  });
+  const result = await response.json().catch(() => null);
 
-  return `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  if (!response.ok || String(result?.success) !== "true") {
+    throw new Error(result?.message ?? `Falha no envio (${response.status})`);
+  }
 }
 
 function updateMailButton() {
   const dateValue = dateInput.value;
   const { min, max } = getDecemberRange();
 
+  if (isSending) {
+    return;
+  }
+
   if (!dateValue) {
     mailButton.disabled = true;
-    dateStatus.textContent = "Selecione uma data de dezembro para preparar o e-mail.";
+    dateStatus.textContent = "Selecione uma data de dezembro.";
+    return;
+  }
+
+  if (dateValue === sentDateValue) {
+    mailButton.disabled = true;
+    dateStatus.textContent = `Combinado: ${formatDate(dateValue)}. O José já foi avisado! ♥`;
     return;
   }
 
@@ -197,13 +227,33 @@ yesButton.addEventListener("click", celebrate);
 
 dateInput.addEventListener("change", updateMailButton);
 
-mailButton.addEventListener("click", () => {
-  if (!dateInput.value) {
+mailButton.addEventListener("click", async () => {
+  const dateValue = dateInput.value;
+  const { min, max } = getDecemberRange();
+
+  if (isSending || !dateValue || dateValue < min || dateValue > max) {
     updateMailButton();
     return;
   }
 
-  window.location.href = buildMailtoLink(dateInput.value);
+  isSending = true;
+  mailButton.disabled = true;
+  dateInput.disabled = true;
+  dateStatus.textContent = "Avisando o José...";
+
+  try {
+    await sendDateNotification(dateValue);
+    sentDateValue = dateValue;
+    isSending = false;
+    dateInput.disabled = false;
+    updateMailButton();
+  } catch (error) {
+    console.error("Não foi possível enviar a data:", error);
+    isSending = false;
+    dateInput.disabled = false;
+    mailButton.disabled = false;
+    dateStatus.textContent = "Não consegui avisar o José agora. Tenta de novo ou manda uma mensagem pra ele.";
+  }
 });
 
 noButton.addEventListener("pointerenter", (event) => {
